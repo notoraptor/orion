@@ -173,7 +173,7 @@ def create_study_experiments(
             experiments.append(client)
 
         for index, exp in enumerate(experiments):
-            experiments_info.append((int(index / task_number), exp))
+            experiments_info.append(exp)
 
         yield experiments_info
 
