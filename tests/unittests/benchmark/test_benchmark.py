@@ -155,7 +155,7 @@ class TestBenchmark:
 
             benchmark.studies = [study]
 
-            assert benchmark.experiments() == [
+            assert benchmark.get_experiments() == [
                 {
                     "Algorithm": "random",
                     "Experiment Name": "experiment-name-0",
@@ -227,7 +227,7 @@ class TestStudy:
             study.setup_experiments()
 
             assert len(study.experiments_info) == 4
-            assert isinstance(study.experiments_info[0][1], ExperimentClient)
+            assert isinstance(study.experiments_info[0], ExperimentClient)
 
     def test_execute(self, study):
         """Test to execute a study"""
@@ -298,7 +298,7 @@ class TestStudy:
 
             study.experiments_info = experiments
 
-            experiments = study.experiments()
+            experiments = study.get_experiments()
 
             assert (
                 len(experiments) == study_experiments_config["task_number"] * algo_num

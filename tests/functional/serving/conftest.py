@@ -16,6 +16,7 @@ def client():
         yield testing.TestClient(WebApi({"storage": storage}))
 
 
+
 @pytest.fixture()
 def client_with_frontends_uri():
     """Mock the falcon.API instance for testing with custom frontend_uri"""
