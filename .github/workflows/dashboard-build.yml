@@ -24,9 +24,16 @@ jobs:
             # NB: We are in directory dashboard/src
             yarn
             yarn build
+            UPDATE_BUILD = ${ [ ! -d "../build" ] || diff -r build ../build }
+            echo "update_build=${UPDATE_BUILD}" >> $GITHUB_ENV
+            echo Build changes ? ${UPDATE_BUILD}
+      - name: Update compiled Dashboard
+        if: ${{ env.update_build }}
+        run: |
             rm -rf ../build
             mv build ..
       - name: Create Pull Request
+        if: ${{ env.update_build }}
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
@@ -42,6 +49,7 @@ jobs:
           labels: |
             automated pr
       - name: Check outputs
+        if: ${{ env.update_build }}
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
           echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
