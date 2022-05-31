@@ -32,12 +32,12 @@ jobs:
             echo "update_build=${UPDATE_BUILD}" >> $GITHUB_ENV
             echo Build changes ? ${UPDATE_BUILD}
       - name: Update compiled Dashboard
-        if: ${{ env.update_build == "1" }}
+        if: ${{ env.update_build == '1' }}
         run: |
             rm -rf ../build
             mv build ..
       - name: Create Pull Request
-        if: ${{ env.update_build == "1" }}
+        if: ${{ env.update_build == '1' }}
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
@@ -53,7 +53,7 @@ jobs:
           labels: |
             automated pr
       - name: Check outputs
-        if: ${{ env.update_build == "1" }}
+        if: ${{ env.update_build == '1' }}
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
           echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
