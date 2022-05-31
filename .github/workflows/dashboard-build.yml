@@ -11,7 +11,7 @@ defaults:
     working-directory: dashboard/src
 
 jobs:
-  build:
+  build_dashboard:
 
     runs-on: ubuntu-latest
 
