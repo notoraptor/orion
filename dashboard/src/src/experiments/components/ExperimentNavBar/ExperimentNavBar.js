@@ -1,7 +1,5 @@
 import React from 'react';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import { Backend } from '../../../utils/queryServer';
-import { BackendContext } from '../../BackendContext';
 
 import {
   SideNav,
@@ -15,13 +13,13 @@ import {
 } from 'carbon-components-react';
 
 export class ExperimentNavBar extends React.Component {
-  _isMounted = false;
-  static contextType = BackendContext;
   constructor(props) {
-    // prop: onSelectExperiment: function(experiment)
+    // props:
+    // onSelectExperiment: function(experiment)
+    // experiments: [str]
+    // experiment: str
     super(props);
     this.state = {
-      experiments: null,
       search: '',
     };
     this.onSearch = this.onSearch.bind(this);
@@ -59,22 +57,22 @@ export class ExperimentNavBar extends React.Component {
     );
   }
   renderExperimentsList() {
-    if (this.state.experiments === null)
+    if (this.props.experiments === null)
       return this.renderMessageRow('Loading experiments ...');
-    if (!this.state.experiments.length)
+    if (!this.props.experiments.length)
       return this.renderMessageRow('No experiment available');
     // Apply search.
     let experiments;
     if (this.state.search.length) {
       // String to search
-      experiments = this.state.experiments.filter(
+      experiments = this.props.experiments.filter(
         experiment => experiment.toLowerCase().indexOf(this.state.search) >= 0
       );
       if (!experiments.length)
         return this.renderMessageRow('No matching experiment');
     } else {
       // No string to search, display all experiments
-      experiments = this.state.experiments;
+      experiments = this.props.experiments;
     }
     return experiments.map(experiment => (
       <StructuredListRow
@@ -87,7 +85,7 @@ export class ExperimentNavBar extends React.Component {
             `select-experiment-${experiment}`
           )
         }
-        {...(this.context.experiment === experiment
+        {...(this.props.experiment === experiment
           ? {
               className: 'selected-experiment-row',
               title: `unselect experiment '${experiment}'`,
@@ -122,27 +120,6 @@ export class ExperimentNavBar extends React.Component {
       </StructuredListRow>
     );
   }
-  componentDidMount() {
-    this._isMounted = true;
-    const backend = new Backend(this.context.address);
-    backend
-      .query('experiments')
-      .then(results => {
-        const experiments = results.map(experiment => experiment.name);
-        experiments.sort();
-        if (this._isMounted) {
-          this.setState({ experiments });
-        }
-      })
-      .catch(error => {
-        if (this._isMounted) {
-          this.setState({ experiments: [] });
-        }
-      });
-  }
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
 
   onSearch(event) {
     this.setState({ search: (event.target.value || '').toLowerCase() });
@@ -150,7 +127,7 @@ export class ExperimentNavBar extends React.Component {
   onSwitchSelect(event, experiment, inputID) {
     // Prevent default behavior, as we entirely handle click here.
     event.preventDefault();
-    const toBeSelected = this.context.experiment !== experiment;
+    const toBeSelected = this.props.experiment !== experiment;
     document.getElementById(inputID).checked = toBeSelected;
     this.props.onSelectExperiment(toBeSelected ? experiment : null);
   }

@@ -8,14 +8,15 @@ import VisualizationsPage from './content/VisualizationsPage';
 import DatabasePage from './content/DatabasePage';
 import ConfigurationPage from './content/ConfigurationPage';
 import { BackendContext } from './BackendContext';
-import { DEFAULT_BACKEND } from '../utils/queryServer';
+import { Backend, DEFAULT_BACKEND } from '../utils/queryServer';
 import { withRouter } from 'react-router-dom';
 
 class Experiments extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     // Store selected experiment here
-    this.state = { experiment: null };
+    this.state = { experiments: null, experiment: null };
     this.onSelectExperiment = this.onSelectExperiment.bind(this);
   }
   render() {
@@ -29,11 +30,36 @@ class Experiments extends Component {
             experiment: this.state.experiment,
           }}>
           <TutorialHeader dashboard="experiments" />
-          <ExperimentNavBar onSelectExperiment={this.onSelectExperiment} />
+          <ExperimentNavBar
+            experiment={this.state.experiment}
+            experiments={this.state.experiments}
+            onSelectExperiment={this.onSelectExperiment}
+          />
           <Content>{this.renderPage()}</Content>
         </BackendContext.Provider>
       </>
     );
+  }
+  componentDidMount() {
+    this._isMounted = true;
+    const backend = new Backend(DEFAULT_BACKEND);
+    backend
+      .query('experiments')
+      .then(results => {
+        const experiments = results.map(experiment => experiment.name);
+        experiments.sort();
+        if (this._isMounted) {
+          this.setState({ experiments });
+        }
+      })
+      .catch(error => {
+        if (this._isMounted) {
+          this.setState({ experiments: [] });
+        }
+      });
+  }
+  componentWillUnmount() {
+    this._isMounted = false;
   }
   renderPage() {
     switch (this.props.match.params.page || 'landing') {
