@@ -10,6 +10,7 @@ import {
   SkipToContent,
 } from 'carbon-components-react';
 import { Link } from 'react-router-dom';
+import { DEFAULT_BACKEND } from '../../../utils/queryServer';
 
 const TutorialHeader = props => (
   <HeaderContainer
@@ -59,6 +60,12 @@ const TutorialHeader = props => (
               to="/configuration"
               replace>
               Configuration
+            </HeaderMenuItem>
+            <HeaderMenuItem
+              href={`${DEFAULT_BACKEND}/dump`}
+              target="_blank"
+              title="Export database">
+              Export database
             </HeaderMenuItem>
           </HeaderMenu>
           <HeaderMenu
