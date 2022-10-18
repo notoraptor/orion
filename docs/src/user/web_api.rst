@@ -320,7 +320,7 @@ The database dumping resource allows to dump database content into a PickledDB a
       If unspecified and name is specified, the **oldest** version of the experiment is exported.
       If both name and version are unspecified, whole database is dumped.
 
-   :statuscode 404: When an error occured during dumping.
+   :statuscode 404: When an error occurred during dumping.
 
 
 Errors
