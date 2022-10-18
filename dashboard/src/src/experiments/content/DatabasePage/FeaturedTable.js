@@ -1,8 +1,8 @@
 import {
   ArrowDown20,
+  ArrowsHorizontal20,
   ArrowsVertical20,
   ArrowUp20,
-  ArrowsHorizontal20,
 } from '@carbon/icons-react';
 import React from 'react';
 import {
@@ -21,7 +21,7 @@ import {
   Row,
 } from 'carbon-components-react';
 import { useDrag, useDrop } from 'react-dnd';
-import ReactDOM from 'react-dom';
+import { ModalStateManager } from '../../components/ModalStateManager';
 
 function collectLeafColumnIndices(columDefinitions, output) {
   columDefinitions.forEach(columnDefinition => {
@@ -134,28 +134,6 @@ function DraggableColumnHeader({ header, table }) {
 const sortingIcons = {
   asc: <ArrowUp20 className="bx--table-sort__icon" />,
   desc: <ArrowDown20 className="bx--table-sort__icon" />,
-};
-
-/**
- * Simple state manager for modals.
- * Reference: https://react.carbondesignsystem.com/?path=/story/components-modal--with-state-manager
- */
-const ModalStateManager = ({
-  renderLauncher: LauncherContent,
-  children: ModalContent,
-}) => {
-  const [open, setOpen] = React.useState(false);
-  return (
-    <>
-      {!ModalContent || typeof document === 'undefined'
-        ? null
-        : ReactDOM.createPortal(
-            <ModalContent open={open} setOpen={setOpen} />,
-            document.body
-          )}
-      {LauncherContent && <LauncherContent open={open} setOpen={setOpen} />}
-    </>
-  );
 };
 
 export function FeaturedTable({ columns, data, experiment }) {

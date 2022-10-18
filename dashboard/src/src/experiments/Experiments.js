@@ -29,7 +29,10 @@ class Experiments extends Component {
             // so that it is available in route components
             experiment: this.state.experiment,
           }}>
-          <TutorialHeader dashboard="experiments" />
+          <TutorialHeader
+            dashboard="experiments"
+            experiments={this.state.experiments}
+          />
           <ExperimentNavBar
             experiment={this.state.experiment}
             experiments={this.state.experiments}

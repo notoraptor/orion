@@ -71,3 +71,8 @@ a.bx--header__menu-item.bx--header__menu-title[aria-label='benchmarks (selected)
 .modal-trial-key {
   text-align: right;
 }
+.bx--btn-set .bx--btn.button-export-experiment {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}

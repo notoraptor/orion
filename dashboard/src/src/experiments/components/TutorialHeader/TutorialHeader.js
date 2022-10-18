@@ -8,10 +8,18 @@ import {
   HeaderMenuButton,
   HeaderMenuItem,
   SkipToContent,
+  Modal,
+  ButtonSet,
+  Grid,
+  Row,
+  Column,
+  Button,
 } from 'carbon-components-react';
 import { Link } from 'react-router-dom';
 import { DEFAULT_BACKEND } from '../../../utils/queryServer';
+import { ModalStateManager } from '../ModalStateManager';
 
+// Props: dashboard: str, experiments: [str]
 const TutorialHeader = props => (
   <HeaderContainer
     render={({ isSideNavExpanded, onClickSideNavExpand }) => (
@@ -67,6 +75,45 @@ const TutorialHeader = props => (
               title="Export database">
               Export database
             </HeaderMenuItem>
+            {props.experiments ? (
+              <HeaderMenuItem title="Export experiment ...">
+                <ModalStateManager
+                  renderLauncher={({ setOpen }) => (
+                    <span className="span-link" onClick={() => setOpen(true)}>
+                      Export experiment ...
+                    </span>
+                  )}>
+                  {({ open, setOpen }) => (
+                    <Modal
+                      modalLabel="Export experiment"
+                      modalHeading="Select experiment to export"
+                      passiveModal={true}
+                      open={open}
+                      onRequestClose={() => setOpen(false)}>
+                      <ButtonSet stacked={true}>
+                        {props.experiments.map((experiment, expIndex) => (
+                          <Button
+                            key={expIndex}
+                            className="button-export-experiment"
+                            kind="secondary"
+                            onClick={() => {
+                              window.open(
+                                `${DEFAULT_BACKEND}/dump?name=${experiment}`,
+                                '_blank'
+                              );
+                              setOpen(false);
+                            }}>
+                            {experiment}
+                          </Button>
+                        ))}
+                      </ButtonSet>
+                    </Modal>
+                  )}
+                </ModalStateManager>
+              </HeaderMenuItem>
+            ) : (
+              ''
+            )}
           </HeaderMenu>
           <HeaderMenu
             aria-label={
