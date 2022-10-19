@@ -12,7 +12,7 @@ import logging
 import falcon
 from falcon_cors import CORS, CORSMiddleware
 
-from orion.serving.database_dumping import DatabaseDumpingResource
+from orion.serving.storage_resource import StorageResource
 from orion.serving.experiments_resource import ExperimentsResource
 from orion.serving.plots_resources import PlotsResource
 from orion.serving.runtime import RuntimeResource
@@ -112,7 +112,7 @@ class WebApi(falcon.API):
         experiments_resource = ExperimentsResource(self.storage)
         trials_resource = TrialsResource(self.storage)
         plots_resource = PlotsResource(self.storage)
-        db_dump_resource = DatabaseDumpingResource(self.storage)
+        storage_resource = StorageResource(self.storage)
 
         # Build routes
         self.add_route("/", root_resource)
@@ -140,7 +140,8 @@ class WebApi(falcon.API):
         self.add_route(
             "/plots/regret/{experiment_name}", plots_resource, suffix="regret"
         )
-        self.add_route("/dump", db_dump_resource)
+        self.add_route("/dump", storage_resource, suffix='dump')
+        self.add_route("/load", storage_resource, suffix='load')
 
     def start(self):
         """A hook to when a Gunicorn worker calls run()."""
