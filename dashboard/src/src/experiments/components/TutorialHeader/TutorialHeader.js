@@ -14,6 +14,9 @@ import {
   Row,
   Column,
   Button,
+  Form,
+  FormGroup,
+  FileUploader,
 } from 'carbon-components-react';
 import { Link } from 'react-router-dom';
 import { DEFAULT_BACKEND } from '../../../utils/queryServer';
@@ -110,6 +113,17 @@ const TutorialHeader = props => (
                     </Modal>
                   )}
                 </ModalStateManager>
+              </HeaderMenuItem>
+            ) : (
+              ''
+            )}
+            {props.experiments ? (
+              <HeaderMenuItem
+                title="Import data"
+                element={Link}
+                to="/import"
+                replace>
+                Import data ...
               </HeaderMenuItem>
             ) : (
               ''

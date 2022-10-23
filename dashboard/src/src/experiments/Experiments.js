@@ -5,6 +5,7 @@ import ExperimentNavBar from './components/ExperimentNavBar';
 import LandingPage from './content/LandingPage';
 import StatusPage from './content/StatusPage';
 import VisualizationsPage from './content/VisualizationsPage';
+import { StorageImportPage } from './content/StorageImportPage/StorageImportPage';
 import DatabasePage from './content/DatabasePage';
 import ConfigurationPage from './content/ConfigurationPage';
 import { BackendContext } from './BackendContext';
@@ -76,6 +77,8 @@ class Experiments extends Component {
         return <DatabasePage />;
       case 'configuration':
         return <ConfigurationPage />;
+      case 'import':
+        return <StorageImportPage />;
       default:
         break;
     }
