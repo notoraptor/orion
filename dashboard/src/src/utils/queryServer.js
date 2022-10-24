@@ -31,7 +31,7 @@ export class Backend {
    * Create a Bckend instance.
    * @param {string} address - base URL of Orion server
    */
-  constructor(address) {
+  constructor(address = DEFAULT_BACKEND) {
     this.baseURL = address;
   }
 
@@ -45,6 +45,25 @@ export class Backend {
     return new Promise((resolve, reject) => {
       const apiCall = `${this.baseURL}/${path}`;
       makeRESTCall(apiCall, params, resolve, reject);
+    });
+  }
+
+  /**
+   * Post a form
+   * @param path {string} - path to post on Orion server. Will be added to base URL.
+   * @param formData {FormData} - form to post.
+   */
+  postForm(path, formData) {
+    return new Promise((resolve, reject) => {
+      axios
+        .postForm(`${this.baseURL}/${path}`, formData, {
+          responseType: 'json',
+          responseEncoding: 'utf8',
+          adapter: adapter,
+          timeout: 300000,
+        })
+        .then(response => resolve(response.data))
+        .catch(err => reject(err.response.data));
     });
   }
 }
