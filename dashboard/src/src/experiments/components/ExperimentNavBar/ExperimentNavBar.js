@@ -38,7 +38,14 @@ export class ExperimentNavBar extends React.Component {
             <StructuredListHead>
               <StructuredListRow head>
                 <StructuredListCell className="experiment-cell" head>
-                  Experiment
+                  <div
+                    title={
+                      this.props.experiments === null
+                        ? 'Experiments not yet loaded'
+                        : `${this.props.experiments.length} experiment(s) in database`
+                    }>
+                    Experiment
+                  </div>
                 </StructuredListCell>
                 <StructuredListCell head>Status</StructuredListCell>
               </StructuredListRow>

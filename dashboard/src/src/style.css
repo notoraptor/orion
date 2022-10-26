@@ -76,3 +76,12 @@ a.bx--header__menu-item.bx--header__menu-title[aria-label='benchmarks (selected)
   width: 100%;
   max-width: 100%;
 }
+.bottom-div {
+  border: 1px solid rgb(250, 250, 250);
+  border-radius: 5px;
+  padding: 1rem;
+  background-color: rgb(240, 240, 240);
+  min-height: 10rem;
+  max-height: 20rem;
+  overflow: auto;
+}

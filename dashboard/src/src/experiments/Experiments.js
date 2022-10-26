@@ -19,6 +19,8 @@ class Experiments extends Component {
     // Store selected experiment here
     this.state = { experiments: null, experiment: null };
     this.onSelectExperiment = this.onSelectExperiment.bind(this);
+    this.loadExperiments = this.loadExperiments.bind(this);
+    this.onReload = this.onReload.bind(this);
   }
   render() {
     return (
@@ -45,22 +47,7 @@ class Experiments extends Component {
     );
   }
   componentDidMount() {
-    this._isMounted = true;
-    const backend = new Backend(DEFAULT_BACKEND);
-    backend
-      .query('experiments')
-      .then(results => {
-        const experiments = results.map(experiment => experiment.name);
-        experiments.sort();
-        if (this._isMounted) {
-          this.setState({ experiments });
-        }
-      })
-      .catch(error => {
-        if (this._isMounted) {
-          this.setState({ experiments: [] });
-        }
-      });
+    this.loadExperiments();
   }
   componentWillUnmount() {
     this._isMounted = false;
@@ -78,13 +65,37 @@ class Experiments extends Component {
       case 'configuration':
         return <ConfigurationPage />;
       case 'import':
-        return <StorageImportPage />;
+        return <StorageImportPage onReload={this.onReload} />;
       default:
         break;
     }
   }
+  loadExperiments() {
+    this._isMounted = true;
+    const backend = new Backend(DEFAULT_BACKEND);
+    backend
+      .query('experiments')
+      .then(results => {
+        const experiments = results.map(experiment => experiment.name);
+        experiments.sort();
+        if (this._isMounted) {
+          this.setState({ experiments });
+        }
+      })
+      .catch(error => {
+        if (this._isMounted) {
+          this.setState({ experiments: [] });
+        }
+      });
+  }
   onSelectExperiment(experiment) {
     this.setState({ experiment });
+  }
+  onReload() {
+    this.setState(
+      { experiments: null, experiment: null },
+      this.loadExperiments
+    );
   }
 }
 
