@@ -85,3 +85,7 @@ a.bx--header__menu-item.bx--header__menu-title[aria-label='benchmarks (selected)
   max-height: 20rem;
   overflow: auto;
 }
+.storage-import-progress > * {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

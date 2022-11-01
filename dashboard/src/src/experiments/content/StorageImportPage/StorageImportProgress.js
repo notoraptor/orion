@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Backend } from '../../../utils/queryServer';
-import { Button } from 'carbon-components-react';
+import {
+  Button,
+  unstable_ProgressBar as ProgressBar,
+} from 'carbon-components-react';
 
 class BottomDiv extends React.Component {
   constructor(props) {
@@ -28,38 +31,56 @@ BottomDiv.propTypes = {
 };
 
 const IMPORT_STATUS_TITLE = {
-  run: 'Importing ...',
-  fail: 'Cancelled, error occurred.',
-  success: 'Successfully imported.',
+  active: 'Importing ...',
+  error: 'Cancelled, error occurred.',
+  finished: 'Successfully imported.',
 };
 
 export class StorageImportProgress extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { messages: [], status: null };
+    this.state = {
+      messages: [],
+      status: null,
+      progress_message: '',
+      progress_value: 0.0,
+    };
     this.getNextMessages = this.getNextMessages.bind(this);
   }
   render() {
+    const value = Math.round(this.state.progress_value * 100);
+    const status = this.state.status;
     return (
-      <>
-        <h5>{IMPORT_STATUS_TITLE[this.state.status || 'run']}</h5>
-        <BottomDiv>
-          {this.state.messages.map((message, index) => (
-            <div key={index}>
-              <code key={index}>{message}</code>
-            </div>
-          ))}
-        </BottomDiv>
-        {this.state.status === 'run' ? (
+      <div className="storage-import-progress">
+        <div>
+          <ProgressBar
+            status={status}
+            label={IMPORT_STATUS_TITLE[status || 'active']}
+            helperText={`${this.state.progress_message} (${value}%)${status === 'error' ? '. ' + this.state.messages[this.state.messages.length - 1] : ''}`}
+            value={value}
+          />
+        </div>
+        {this.props.showLog ? (
+          <BottomDiv>
+            {this.state.messages.map((message, index) => (
+              <div key={index}>
+                <code key={index}>{message}</code>
+              </div>
+            ))}
+          </BottomDiv>
+        ) : (
+          ''
+        )}
+        {this.state.status === 'active' ? (
           ''
         ) : (
-          <p>
+          <div>
             <Button kind="secondary" onClick={() => this.props.onSetTask(null)}>
               Import other data
             </Button>
-          </p>
+          </div>
         )}
-      </>
+      </div>
     );
   }
   componentDidMount() {
@@ -71,13 +92,21 @@ export class StorageImportProgress extends React.Component {
       .query(`import-status/${this.props.task}`)
       .then(progress => {
         const messages = [...this.state.messages, ...progress.messages];
-        this.setState({ messages, status: progress.status }, () => {
-          if (progress.status === 'run') {
-            setTimeout(this.getNextMessages, 100);
-          } else {
-            this.props.onReload();
+        this.setState(
+          {
+            messages,
+            status: progress.status,
+            progress_message: progress.progress_message,
+            progress_value: progress.progress_value,
+          },
+          () => {
+            if (progress.status === 'active') {
+              setTimeout(this.getNextMessages, 100);
+            } else {
+              this.props.onReload();
+            }
           }
-        });
+        );
       })
       .catch(error => {});
   }
@@ -86,4 +115,5 @@ StorageImportProgress.propTypes = {
   task: PropTypes.string.isRequired,
   onSetTask: PropTypes.func.isRequired,
   onReload: PropTypes.func.isRequired,
+  showLog: PropTypes.bool,
 };
