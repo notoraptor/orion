@@ -56,7 +56,11 @@ export class StorageImportProgress extends React.Component {
           <ProgressBar
             status={status}
             label={IMPORT_STATUS_TITLE[status || 'active']}
-            helperText={`${this.state.progress_message} (${value}%)${status === 'error' ? '. ' + this.state.messages[this.state.messages.length - 1] : ''}`}
+            helperText={`${this.state.progress_message} (${value}%)${
+              status === 'error'
+                ? '. ' + this.state.messages[this.state.messages.length - 1]
+                : ''
+            }`}
             value={value}
           />
         </div>

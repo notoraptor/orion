@@ -8,8 +8,8 @@ Serves all the requests made to storage import/export REST endpoints.
 import json
 import logging
 import multiprocessing
-import traceback
 import os
+import traceback
 import uuid
 from datetime import datetime
 from queue import Empty
@@ -75,7 +75,7 @@ class ImportTask:
     def __init__(self):
         self.task_id = str(uuid.uuid4())
         self.notifications = Notifications()
-        self.progress_message = multiprocessing.Array('c', 512)
+        self.progress_message = multiprocessing.Array("c", 512)
         self.progress_value = multiprocessing.Value("d", 0.0)
         self.completed = multiprocessing.Value("i", 0)
 
@@ -100,7 +100,14 @@ def _import_data(task: ImportTask, storage, load_host, resolve, name, version):
     try:
         print("Import starting.", task.task_id)
         logging.basicConfig(stream=task.notifications, force=True)
-        load_database(storage, load_host, resolve, name, version, progress_callback=task.set_progress)
+        load_database(
+            storage,
+            load_host,
+            resolve,
+            name,
+            version,
+            progress_callback=task.set_progress,
+        )
         task.set_completed(success=True)
     except Exception as exc:
         traceback.print_tb(exc.__traceback__)
