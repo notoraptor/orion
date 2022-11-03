@@ -111,17 +111,13 @@ const TutorialHeader = props => (
             ) : (
               ''
             )}
-            {props.experiments ? (
-              <HeaderMenuItem
-                title="Import data"
-                element={Link}
-                to="/import"
-                replace>
-                Import data ...
-              </HeaderMenuItem>
-            ) : (
-              ''
-            )}
+            <HeaderMenuItem
+              title="Import data"
+              element={Link}
+              to="/import"
+              replace>
+              Import data ...
+            </HeaderMenuItem>
           </HeaderMenu>
           <HeaderMenu
             aria-label={
