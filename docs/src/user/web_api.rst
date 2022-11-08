@@ -308,7 +308,8 @@ visualize your experiments and their results.
 Database dumping
 ----------------
 
-The database dumping resource allows to dump database content into a PickledDB and download it as PKL file.
+The database dumping resource allows to dump database content
+into a PickledDB and download it as PKL file.
 
 .. http:get:: /dump
 
@@ -335,9 +336,11 @@ The database loading resource allow to import data from a PKL file
 
    :query file: PKL file to import
    :query resolve: policy to resolve conflicts during import. Either:
-      "ignore": ignore imported data on conflict
-      "overwrite": overwrite ancient data on conflict
-      "bump": bump version of imported data before insertion on conflict
+
+    - ``ignore``: ignore imported data on conflict
+    - ``overwrite``: overwrite ancient data on conflict
+    - ``bump``: bump version of imported data before insertion on conflict
+
    :query name: Optional name of experiment to import. If unspecified, whole data from PKL file is imported.
    :query version: Optional version of experiment to import.
       If unspecified and name is specified, the **oldest** version of the experiment is imported.
